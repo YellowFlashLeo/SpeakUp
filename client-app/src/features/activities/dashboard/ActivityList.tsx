@@ -4,8 +4,9 @@ import { IActivity } from '../../../app/modules/activity';
 
 interface Props {
     activities: IActivity[];
+    selectActivity : (id:string) => void;
 }
-export default function ActivityList({activities}: Props){
+export default function ActivityList({activities, selectActivity}: Props){
     return (
        <Segment>
            <Item.Group divided>
@@ -19,7 +20,7 @@ export default function ActivityList({activities}: Props){
                               <div>{activity.city}, {activity.venue}</div>
                           </Item.Description>
                           <Item.Extra>
-                              <Button floated='right' content='View' color='blue'/>
+                              <Button onClick={() => selectActivity(activity.id)} floated='right' content='View' color='blue'/>
                               <Label basic content={activity.category}/>
                           </Item.Extra>
                       </Item.Content>
@@ -29,3 +30,6 @@ export default function ActivityList({activities}: Props){
        </Segment>
     )
 }
+
+//  <Button onClick={()=>selectActivity(activity.id)} is written this way, so that it doesnt execute straight away.
+// if you say  <Button onClick={selectActivity(activity.id)} it will execute as soon as component was rendered
