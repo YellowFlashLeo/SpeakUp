@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import { Container } from 'semantic-ui-react';
 import { IActivity } from '../modules/activity';
 import NavBar from './NavBaR';
 import ActivityDashboard from '../../features/activities/dashboard/ActivityDashboard';
 import { v4 as uuid } from 'uuid';
+import agent from '../api/agent';
+import LoadingComponent from './LoadingComponents';
 
 // useState in React Hook which allows to store state inside Component
 // [activities] will name of variable where state will be stored
@@ -15,10 +16,18 @@ function App() {
   // we are saying either IActivity or undefined. Initial state is udefined
   const [selectedActvity, setSelectedActivity] = useState<IActivity | undefined>(undefined);
   const [editMode, setEditMode] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios.get<IActivity[]>("http://localhost:5000/api/activities").then(response => {
-      setActivities(response.data);
+    agent.Activities.list().then(response => {
+      let activities: IActivity[] = [];
+      // we want to take first part of what we split, numbered date no time
+      response.forEach(activity =>{
+        activity.date = activity.date.split('T')[0];
+        activities.push(activity);
+      })
+      setActivities(activities);
+      setLoading(false);
     })
   }, []) // will ensure it only runs once, otherwise we will call api and get data, setActivities will assign data to activities and since React component chnages. It causes rerender of the entire component,
   // so useEffect will be triggered again and again (endless loop)
@@ -53,6 +62,8 @@ function App() {
     setEditMode(false);
     setSelectedActivity(activity);
   }
+
+  if(loading) return <LoadingComponent content="Loading app"/>
   return (
     <>
       <NavBar openForm={handleFormOpen} />

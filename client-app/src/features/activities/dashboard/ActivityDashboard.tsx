@@ -27,7 +27,7 @@ export default function ActivityDashboard({ activities, selectedActivity, editMo
         <Grid>
             <Grid.Column width='10'>
                 <ActivityList 
-                activities={activities}
+                 activities={activities}
                  selectActivity={selectActivity} 
                  deleteActivity={deleteActivity}
                  />
