@@ -17,12 +17,13 @@ function App() {
   const [selectedActvity, setSelectedActivity] = useState<IActivity | undefined>(undefined);
   const [editMode, setEditMode] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     agent.Activities.list().then(response => {
       let activities: IActivity[] = [];
       // we want to take first part of what we split, numbered date no time
-      response.forEach(activity =>{
+      response.forEach(activity => {
         activity.date = activity.date.split('T')[0];
         activities.push(activity);
       })
@@ -50,20 +51,40 @@ function App() {
   }
 
   function handleDeleteActivity(id: string) {
-    setActivities([...activities.filter(x => x.id !== id)]);
+    setSubmitting(true);
+    agent.Activities.delete(id).then(() => {
+      setActivities([...activities.filter(x => x.id !== id)]);
+      setSubmitting(false);
+    })
   }
 
   // if we dont have activity.id then we create new 
   // ([...activities.filter(a => a.id !== activity.id), activity]) return [] of activities without newly passed(the one we edit) and add edited later
+
   function handleCreateOrEditActivity(activity: IActivity) {
-    activity.id ? setActivities([...activities.filter(a => a.id !== activity.id), activity])
-      : setActivities([...activities, { ...activity, id: uuid() }]); // we create new activity iterate over all its properties and values and assigned them to
+    setSubmitting(true);
+    if (activity.id) {
+      agent.Activities.update(activity).then(() => {
+        setActivities([...activities.filter(x => x.id !== activity.id), activity])
+        setSelectedActivity(activity);
+        setEditMode(false);
+        setSubmitting(false);
+      })
+    }
+    // we create new activity iterate over all its properties and values and assigned them to
     // new instance accordingly, we also add guid to id of new activity so that each of them will be unique
-    setEditMode(false);
-    setSelectedActivity(activity);
+    else {
+      activity.id = uuid();
+      agent.Activities.create(activity).then(() => {
+        setActivities([...activities, activity])
+        setSelectedActivity(activity);
+        setEditMode(false);
+        setSubmitting(false);
+      })
+    }
   }
 
-  if(loading) return <LoadingComponent content="Loading app"/>
+  if (loading) return <LoadingComponent content="Loading app" />
   return (
     <>
       <NavBar openForm={handleFormOpen} />
@@ -77,7 +98,8 @@ function App() {
           openForm={handleFormOpen}
           closeForm={handleFormClose}
           createOrEdit={handleCreateOrEditActivity}
-          deleteActivity = {handleDeleteActivity}
+          deleteActivity={handleDeleteActivity}
+          submitting={submitting}
         />
       </Container>
     </>
