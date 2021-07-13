@@ -6,12 +6,16 @@ import ActivityDashboard from '../../features/activities/dashboard/ActivityDashb
 import { v4 as uuid } from 'uuid';
 import agent from '../api/agent';
 import LoadingComponent from './LoadingComponents';
+import { useStore } from '../stores/store';
 
 // useState in React Hook which allows to store state inside Component
 // [activities] will name of variable where state will be stored
 // [setActivities] function to state the state
 // useState([]), here we delcare initial state for activities
 function App() {
+  const {activityStore} = useStore();
+
+
   const [activities, setActivities] = useState<IActivity[]>([]);
   // we are saying either IActivity or undefined. Initial state is udefined
   const [selectedActvity, setSelectedActivity] = useState<IActivity | undefined>(undefined);
@@ -89,6 +93,7 @@ function App() {
     <>
       <NavBar openForm={handleFormOpen} />
       <Container style={{ marginTop: '7em' }}>
+        <h2>{activityStore.title}</h2>
         <ActivityDashboard
           activities={activities}
           selectedActivity={selectedActvity}
