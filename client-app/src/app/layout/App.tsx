@@ -14,7 +14,7 @@ import { observer } from 'mobx-react-lite';
 // [setActivities] function to state the state
 // useState([]), here we delcare initial state for activities
 function App() {
-  const {activityStore} = useStore();
+  const { activityStore } = useStore();
 
 
   const [activities, setActivities] = useState<IActivity[]>([]);
@@ -27,23 +27,6 @@ function App() {
     activityStore.loadActivities();
   }, [activityStore]) // will ensure it only runs once, otherwise we will call api and get data, setActivities will assign data to activities and since React component chnages. It causes rerender of the entire component,
   // so useEffect will be triggered again and again (endless loop)
-
-  function handleSelectActivity(id: string) {
-    setSelectedActivity(activities.find(activity => activity.id == id));
-  }
-
-  function handleCancelSelectActivity() {
-    setSelectedActivity(undefined);
-  }
-
-  function handleFormOpen(id?: string) {
-    id ? handleSelectActivity(id) : handleCancelSelectActivity();
-    setEditMode(true);
-  }
-
-  function handleFormClose() {
-    setEditMode(false);
-  }
 
   function handleDeleteActivity(id: string) {
     setSubmitting(true);
@@ -82,16 +65,10 @@ function App() {
   if (activityStore.loadingInitial) return <LoadingComponent content="Loading app" />
   return (
     <>
-      <NavBar openForm={handleFormOpen} />
+      <NavBar />
       <Container style={{ marginTop: '7em' }}>
         <ActivityDashboard
           activities={activityStore.activities}
-          selectedActivity={selectedActvity}
-          selectActivity={handleSelectActivity}
-          cancelSelectActivity={handleCancelSelectActivity}
-          editMode={editMode}
-          openForm={handleFormOpen}
-          closeForm={handleFormClose}
           createOrEdit={handleCreateOrEditActivity}
           deleteActivity={handleDeleteActivity}
           submitting={submitting}
@@ -101,4 +78,4 @@ function App() {
   );
 }
 // will allow this component to observe DOM changes
-export default observer (App);
+export default observer(App);

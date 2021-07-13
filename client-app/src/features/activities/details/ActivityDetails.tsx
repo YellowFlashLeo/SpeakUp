@@ -1,13 +1,15 @@
 import React from 'react';
 import { Button, Card, Image } from 'semantic-ui-react';
-import { IActivity } from '../../../app/modules/activity';
+import LoadingComponent from '../../../app/layout/LoadingComponents';
+import { useStore } from '../../../app/stores/store';
 
-interface Props {
-    activity: IActivity;
-    cancelSelectActivity : () => void;
-    openForm: (id:string) => void;
-}
-export default function ActivityDetails({ activity,cancelSelectActivity,openForm }: Props) {
+export default function ActivityDetails() {
+    const { activityStore } = useStore();
+    const { selectedActivity: activity, openForm, cancelSelectedActivity } = activityStore;
+
+    // below line doesnt do anything since activity cant be null at this stage
+    if (!activity) return <LoadingComponent />;
+
     return (
         <Card fluid>
             <Image src={`/assets/categoryImages/${activity.category}.jpg`} />
@@ -22,8 +24,8 @@ export default function ActivityDetails({ activity,cancelSelectActivity,openForm
             </Card.Content>
             <Card.Content extra>
                 <Button.Group widths='2'>
-                    <Button onClick={()=> openForm(activity.id)} basic color='blue' content='Edit' />
-                    <Button onClick={cancelSelectActivity} basic color='grey' content='Cancel' />
+                    <Button onClick={() => openForm(activity.id)} basic color='blue' content='Edit' />
+                    <Button onClick={cancelSelectedActivity} basic color='grey' content='Cancel' />
                 </Button.Group>
             </Card.Content>
         </Card>
