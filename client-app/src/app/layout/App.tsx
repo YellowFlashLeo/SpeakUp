@@ -7,6 +7,7 @@ import { v4 as uuid } from 'uuid';
 import agent from '../api/agent';
 import LoadingComponent from './LoadingComponents';
 import { useStore } from '../stores/store';
+import { observer } from 'mobx-react-lite';
 
 // useState in React Hook which allows to store state inside Component
 // [activities] will name of variable where state will be stored
@@ -20,21 +21,11 @@ function App() {
   // we are saying either IActivity or undefined. Initial state is udefined
   const [selectedActvity, setSelectedActivity] = useState<IActivity | undefined>(undefined);
   const [editMode, setEditMode] = useState(false);
-  const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    agent.Activities.list().then(response => {
-      let activities: IActivity[] = [];
-      // we want to take first part of what we split, numbered date no time
-      response.forEach(activity => {
-        activity.date = activity.date.split('T')[0];
-        activities.push(activity);
-      })
-      setActivities(activities);
-      setLoading(false);
-    })
-  }, []) // will ensure it only runs once, otherwise we will call api and get data, setActivities will assign data to activities and since React component chnages. It causes rerender of the entire component,
+    activityStore.loadActivities();
+  }, [activityStore]) // will ensure it only runs once, otherwise we will call api and get data, setActivities will assign data to activities and since React component chnages. It causes rerender of the entire component,
   // so useEffect will be triggered again and again (endless loop)
 
   function handleSelectActivity(id: string) {
@@ -88,14 +79,13 @@ function App() {
     }
   }
 
-  if (loading) return <LoadingComponent content="Loading app" />
+  if (activityStore.loadingInitial) return <LoadingComponent content="Loading app" />
   return (
     <>
       <NavBar openForm={handleFormOpen} />
       <Container style={{ marginTop: '7em' }}>
-        <h2>{activityStore.title}</h2>
         <ActivityDashboard
-          activities={activities}
+          activities={activityStore.activities}
           selectedActivity={selectedActvity}
           selectActivity={handleSelectActivity}
           cancelSelectActivity={handleCancelSelectActivity}
@@ -110,5 +100,5 @@ function App() {
     </>
   );
 }
-
-export default App;
+// will allow this component to observe DOM changes
+export default observer (App);
