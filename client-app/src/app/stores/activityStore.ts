@@ -2,7 +2,6 @@ import { makeAutoObservable, runInAction } from "mobx";
 import agent from "../api/agent";
 import { IActivity } from "../modules/activity";
 import { v4 as uuid } from 'uuid';
-import { act } from "react-dom/test-utils";
 
 export default class ActivityStore {
     activities: IActivity[] = [];
@@ -90,6 +89,24 @@ export default class ActivityStore {
                 this.activities = [...this.activities.filter(a => a.id !== activity.id), activity];
                 this.selectedActivity = activity;
                 this.editMode = false;
+                this.loading = false;
+            })
+        } catch (error) {
+            console.log(error);
+            runInAction(() => {
+                this.loading = false;
+            })
+        }
+    }
+
+    deleteActivity = async (id: string) => {
+        this.loading = true;
+        try {
+            await agent.Activities.delete(id);
+            runInAction(() => {
+                this.activities = [...this.activities.filter(a => a.id !== id)];
+                // will unselect it and remove from the right side
+                if(this.selectedActivity?.id === id) this.cancelSelectedActivity();
                 this.loading = false;
             })
         } catch (error) {
