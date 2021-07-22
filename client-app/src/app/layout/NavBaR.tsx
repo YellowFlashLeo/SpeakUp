@@ -4,7 +4,7 @@ import { Button, Container, Menu } from 'semantic-ui-react';
 import { useStore } from '../stores/store';
 
 export default function NavBar() {
-    const {activityStore} = useStore();
+    const { activityStore } = useStore();
 
     return (
         <Menu inverted fixed='top'>
@@ -13,9 +13,9 @@ export default function NavBar() {
                     <img src="assets/logo.png" alt='logo' style={{ marginRight: 10 }} />
                     Reactivities
                 </Menu.Item>
-                <Menu.Item  as={NavLink} to='/activities' name='Activities' />
+                <Menu.Item as={NavLink} to='/activities' name='Activities' />
                 <Menu.Item>
-                    <Button as={NavLink} to='/createActivity' onClick={() => activityStore.openForm()} positive content='Create Activity' />
+                    <Button as={NavLink} to='/createActivity' positive content='Create Activity' />
                 </Menu.Item>
             </Container>
         </Menu>
