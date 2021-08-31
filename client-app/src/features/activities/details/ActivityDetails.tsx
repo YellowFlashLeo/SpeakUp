@@ -1,7 +1,6 @@
 import { observer } from 'mobx-react-lite';
-import React from 'react';
 import { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { Button, Card, Image } from 'semantic-ui-react';
 import LoadingComponent from '../../../app/layout/LoadingComponents';
 import { useStore } from '../../../app/stores/store';
@@ -13,7 +12,7 @@ export default observer(function ActivityDetails() {
 
     useEffect(() => {
         if (id) loadActivity(id);
-    }, [id, loadActivity]);
+    }, [id, loadActivity]);  // dependency to avoid infinte loop
 
     // below line doesnt do anything since activity cant be null at this stage
     if (loadingInitial || !activity) return <LoadingComponent />;
@@ -32,8 +31,8 @@ export default observer(function ActivityDetails() {
             </Card.Content>
             <Card.Content extra>
                 <Button.Group widths='2'>
-                    <Button basic color='blue' content='Edit' />
-                    <Button basic color='grey' content='Cancel' />
+                    <Button as={Link} to={`/manage/${activity.id}`} basic color='blue' content='Edit' />
+                    <Button as={Link} to='/activities' basic color='grey' content='Cancel' />
                 </Button.Group>
             </Card.Content>
         </Card>

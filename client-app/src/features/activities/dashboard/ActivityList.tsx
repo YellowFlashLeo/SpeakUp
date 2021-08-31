@@ -1,8 +1,8 @@
 import { observer } from 'mobx-react-lite';
-import React, { SyntheticEvent } from 'react';
+import { SyntheticEvent } from 'react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Item, ItemHeader, Label, Segment } from 'semantic-ui-react';
+import { Button, Item, Label, Segment } from 'semantic-ui-react';
 import { useStore } from '../../../app/stores/store';
 
 

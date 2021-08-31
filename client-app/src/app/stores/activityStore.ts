@@ -2,7 +2,6 @@ import { makeAutoObservable, runInAction } from "mobx";
 import agent from "../api/agent";
 import { IActivity } from "../modules/activity";
 import { v4 as uuid } from 'uuid';
-import { throws } from "assert";
 
 export default class ActivityStore {
     actvityRegistry = new Map<string, IActivity>();
@@ -47,6 +46,7 @@ export default class ActivityStore {
         let activity = this.getActivity(id);
         if (activity) {
             this.selectedActivity = activity;
+            return activity;
         } else {
             this.loadingInitial = true;
             try {
@@ -54,13 +54,14 @@ export default class ActivityStore {
                 this.setActivity(activity);
                 this.selectedActivity = activity;
                 this.setLoadingInitial(false);
+                return activity;
             } catch (error) {
                 console.log(error);
                 this.setLoadingInitial(false);
             }
         }
-
     }
+
     private setActivity = (activity: IActivity) => {
         activity.date = activity.date.split('T')[0];
         this.actvityRegistry.set(activity.id, activity);
