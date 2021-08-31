@@ -12,10 +12,11 @@ import ActivityList from './ActivityList';
 // {activities[0] && means do whats on the right if left is not null or undefined
 export default observer(function ActivityDashboard() {
     const { activityStore } = useStore();
+    const { loadActivities, actvityRegistry } = activityStore;
 
     useEffect(() => {
-        activityStore.loadActivities();
-    }, [activityStore]) // will ensure it only runs once, otherwise we will call api and get data, setActivities will assign data to activities and since React component chnages. It causes rerender of the entire component,
+        if (actvityRegistry.size <= 1) loadActivities();
+    }, [actvityRegistry.size,loadActivities]) // will ensure it only runs once, otherwise we will call api and get data, setActivities will assign data to activities and since React component chnages. It causes rerender of the entire component,
     // so useEffect will be triggered again and again (endless loop)
 
     if (activityStore.loadingInitial) return <LoadingComponent content="Loading app" />

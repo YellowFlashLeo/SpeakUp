@@ -2,18 +2,19 @@ import { observer } from 'mobx-react-lite';
 import { ChangeEvent } from 'react';
 import { useEffect } from 'react';
 import { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useHistory, useParams } from 'react-router-dom';
 import { Button, Form, Segment } from 'semantic-ui-react';
 import LoadingComponent from '../../../app/layout/LoadingComponents';
 import { useStore } from '../../../app/stores/store';
+import { v4 as uuid } from 'uuid';
 
 
 // ({activity: selectedActivity,closeForm} : Props) { renaming of activity to selectedActivity
 export default observer(function ActivityForm() {
-
+    const history = useHistory();
     const { activityStore } = useStore();
-    const { createActivity, updateActivity,loadActivity, loading, loadingInitial } = activityStore;
-    const {id} = useParams<{id:string}>();
+    const { createActivity, updateActivity, loadActivity, loading, loadingInitial } = activityStore;
+    const { id } = useParams<{ id: string }>();
 
     // main idea:
     // we check if we get any id which is set when user clicks on activity
@@ -29,12 +30,21 @@ export default observer(function ActivityForm() {
         venue: ''
     });
 
-    useEffect(()=>{
-        if(id) loadActivity(id).then(activity => setActivity(activity!)) //! means we know what we are doing(activity can be undefined)
-    }, [id,loadActivity]);
+    useEffect(() => {
+        if (id) loadActivity(id).then(activity => setActivity(activity!)) //! means we know what we are doing(activity can be undefined)
+    }, [id, loadActivity]);
 
     function handleSubmit() {
-        activity.id ? updateActivity(activity) : createActivity(activity);
+        if (activity.id.length === 0) {
+            let newActivity = {
+                ...activity,
+                id: uuid()
+            };
+            createActivity(newActivity).then(() => history.push(`/activities/${newActivity.id}`))
+        } else {
+            updateActivity(activity).then(() => history.push(`/activities/${activity.id}`))
+        }
+
     }
 
     // we are tracking changes made by user in the input filed of the form
@@ -44,7 +54,7 @@ export default observer(function ActivityForm() {
         setActivity({ ...activity, [name]: value })
     }
 
-    if(loadingInitial) return <LoadingComponent content='Loading activity...'/>
+    if (loadingInitial) return <LoadingComponent content='Loading activity...' />
     return (
         <Segment clearing>
             <Form onSubmit={handleSubmit} autoComplete='off'>
@@ -55,7 +65,7 @@ export default observer(function ActivityForm() {
                 <Form.Input placeholder='City' value={activity.city} name='city' onChange={handleInputChange} />
                 <Form.Input placeholder='Venue' value={activity.venue} name='venue' onChange={handleInputChange} />
                 <Button loading={loading} floated='right' positive type='submit' content='Submit' />
-                <Button floated='right' type='submit' content='Cancel' />
+                <Button as={Link} to='/activities' floated='right' type='submit' content='Cancel' />
             </Form>
         </Segment>
     )

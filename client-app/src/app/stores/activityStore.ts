@@ -1,7 +1,6 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import agent from "../api/agent";
 import { IActivity } from "../modules/activity";
-import { v4 as uuid } from 'uuid';
 
 export default class ActivityStore {
     actvityRegistry = new Map<string, IActivity>();
@@ -75,7 +74,6 @@ export default class ActivityStore {
 
     createActivity = async (activity: IActivity) => {
         this.loading = true;
-        activity.id = uuid();
         try {
             await agent.Activities.create(activity);
             // since its gonna happen in the next tick we use runInAction (becuase entire method is async)
