@@ -7,7 +7,7 @@ import { useStore } from '../../../app/stores/store';
 
 export default observer(function ActivityDetails() {
     const { activityStore } = useStore();
-    const { selectedActivity: activity, loadActivity,loadingInitial } = activityStore;
+    const { selectedActivity: activity, loadActivity, loadingInitial } = activityStore;
     const { id } = useParams<{ id: string }>();
 
     useEffect(() => {

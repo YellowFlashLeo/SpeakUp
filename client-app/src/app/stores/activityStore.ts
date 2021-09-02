@@ -26,6 +26,17 @@ export default class ActivityStore {
             Date.parse(a.date) - Date.parse(b.date));
     }
 
+    // return array of object where each object has key of activity date and value as all activities with the same date
+    get groupedActivities() {
+        return Object.entries(
+            this.activitiesByDate.reduce((activities, activity) => {
+                const date = activity.date; // key
+                activities[date] = activities[date] ? [...activities[date], activity] : [activity]; // foreach activity we check if we have match for activity date.
+                return activities;
+            }, {} as { [key: string]: IActivity[] })
+        )
+    }
+
     loadActivities = async () => {
         this.loadingInitial = true;
         try {
