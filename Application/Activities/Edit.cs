@@ -2,6 +2,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using Domain;
+using FluentValidation;
 using MediatR;
 using Persistence;
 
@@ -13,7 +14,14 @@ namespace Application.Activities
         {
             public Activity Activity { get; set; }
         }
+        public class CommandValidator : AbstractValidator<Command>
+        {
+            public CommandValidator()
+            {
+                RuleFor(x => x.Activity).SetValidator(new ActivityValidator());
 
+            }
+        }
         public class Handler : IRequestHandler<Command>
         {
             private readonly DataContext _context;
@@ -27,8 +35,8 @@ namespace Application.Activities
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
                 var activity = await _context.Activities.FindAsync(request.Activity.Id);
-                 
-                 // maps each of property inside request.Activity to activity from database
+
+                // maps each of property inside request.Activity to activity from database
                 _mapper.Map(request.Activity, activity);
 
                 await _context.SaveChangesAsync();

@@ -1,15 +1,11 @@
 using API.Extensions;
 using Application.Activities;
-using Application.Core;
-using MediatR;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
-using Persistence;
 
 namespace API
 {
@@ -24,7 +20,11 @@ namespace API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers().AddFluentValidation(config =>
+            {
+                // give info to midleware to where we have our rules for fluentValidation configured
+               config.RegisterValidatorsFromAssemblyContaining<Create>();
+            });
             services.AddApplicationServices(_config);
         }
 
