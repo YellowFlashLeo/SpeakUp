@@ -17,6 +17,7 @@ namespace API.Controllers
         // Logic of the method could have been inside controller without function wrapper but that would make controller bigger than it could be 
         protected ActionResult HandleResult<T>(Result<T> result)
         {
+            if (result == null) return NotFound();
             if (result.isSuccess && result.Value != null)
                 return Ok(result.Value);
             if (result.isSuccess && result.Value == null)
