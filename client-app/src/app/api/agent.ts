@@ -1,6 +1,7 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { toast } from 'react-toastify';
 import { textSpanContainsTextSpan } from 'typescript';
+import { history } from '../..';
 import { IActivity } from '../modules/activity';
 
 
@@ -22,12 +23,13 @@ axios.interceptors.response.use(async response => {
     switch (status) {
         case 400:
             toast.error('bad request');
-            break;
+            break; 
         case 401:
             toast.error('unauthorised');
             break;
         case 404:
             toast.error('not found');
+            history.push('/not-found');
             break;
         case 500:
             toast.error('server error');
