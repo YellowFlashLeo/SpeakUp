@@ -1,5 +1,6 @@
 import { createContext, useContext } from "react";
 import ActivityStore from "./activityStore";
+import CommonStore from "./commonStore";
 
 /**
  * So here we will be decalring Stores we have for different functionalities in Interface
@@ -9,11 +10,13 @@ import ActivityStore from "./activityStore";
  * We also need to pass it to all other components to see by going to index.tsx and using <StoreContext.Provider value={store}>
  */
 interface Store {
-    activityStore: ActivityStore
+    activityStore: ActivityStore;
+    commonStore: CommonStore;
 }
 
 export const store: Store = {
-    activityStore: new ActivityStore()
+    activityStore: new ActivityStore(),
+    commonStore: new CommonStore()
 }
 
 export const StoreContext = createContext(store);

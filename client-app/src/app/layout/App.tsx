@@ -9,6 +9,7 @@ import ActivityDetails from '../../features/activities/details/ActivityDetails';
 import TestErrors from '../../features/activities/errors/TestErrors';
 import { ToastContainer } from 'react-toastify';
 import NotFound from '../../features/activities/errors/NotFound';
+import ServerError from '../../features/activities/errors/ServerError';
 
 // useState in React Hook which allows to store state inside Component
 // [activities] will name of variable where state will be stored
@@ -31,6 +32,7 @@ function App() {
                 <Route path='/activities/:id' component={ActivityDetails} />
                 <Route key={location.key} path={['/createActivity', '/manage/:id']} component={ActivityForm} />
                 <Route path='/errors' component={TestErrors} />
+                <Route path='/server-error' component={ServerError}/>+
                 <Route component={NotFound} />
               </Switch>
             </Container>

@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 import { textSpanContainsTextSpan } from 'typescript';
 import { history } from '../..';
 import { IActivity } from '../modules/activity';
+import { store } from '../stores/store';
 
 
 // to make delay
@@ -44,7 +45,10 @@ axios.interceptors.response.use(async response => {
             history.push('/not-found');
             break;
         case 500:
-            toast.error('server error');
+            // so main idea is that we save error we get from client to mobX storage
+            // setServerError will get error and bind it to ServerError intreface
+          store.commonStore.setServerError(data);
+          history.push('/server-error');
             break;
     }
     return Promise.reject(error);
