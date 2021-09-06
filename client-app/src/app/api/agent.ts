@@ -22,8 +22,20 @@ axios.interceptors.response.use(async response => {
     const { data, status } = error.response!;
     switch (status) {
         case 400:
-            toast.error('bad request');
-            break; 
+            // first if statement checks if we get some data in the body of response
+            // if we do then we make it single array with strings (venue:,city: ...)
+            if (data.erros) {
+                const modalStateErros = [];
+                for (const key in data.errors) {
+                    if (data.errors[key]) {
+                        modalStateErros.push(data.errors[key]);
+                    }
+                }
+                throw modalStateErros.flat();
+            } else {
+                toast.error(data); // from API controller
+            }
+            break;
         case 401:
             toast.error('unauthorised');
             break;
