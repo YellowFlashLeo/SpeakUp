@@ -20,9 +20,16 @@ axios.interceptors.response.use(async response => {
     await sleep(1000);
     return response;
 }, (error: AxiosError) => {
-    const { data, status } = error.response!;
+    const { data, status, config } = error.response!;
     switch (status) {
         case 400:
+            if (typeof data === 'string') {
+                toast.error(data);
+            }
+            // for activity which doesnt exist, so that it returns 404 not 400
+            if (config.method === 'get' && data.errors.hasOwnProperty('id')) {
+                history.push('/not-found');
+            }
             // first if statement checks if we get some data in the body of response
             // if we do then we make it single array with strings (venue:,city: ...)
             if (data.erros) {
@@ -32,9 +39,7 @@ axios.interceptors.response.use(async response => {
                         modalStateErros.push(data.errors[key]);
                     }
                 }
-                throw modalStateErros.flat();
-            } else {
-                toast.error(data); // from API controller
+                throw modalStateErros.flat(); // makes it to have validation error strings without surrounding objects
             }
             break;
         case 401:
@@ -47,8 +52,8 @@ axios.interceptors.response.use(async response => {
         case 500:
             // so main idea is that we save error we get from client to mobX storage
             // setServerError will get error and bind it to ServerError intreface
-          store.commonStore.setServerError(data);
-          history.push('/server-error');
+            store.commonStore.setServerError(data);
+            history.push('/server-error');
             break;
     }
     return Promise.reject(error);

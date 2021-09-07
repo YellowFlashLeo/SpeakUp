@@ -29,7 +29,7 @@ export default function TestErrors() {
     }
 
     function handleValidationError() {
-        axios.post(baseUrl + 'activities', {}).catch(err => setErrors(err));
+        axios.post(baseUrl + 'activities', {}).catch(err => setErrors(err)); // will be throwing modalStateErrors flatened now
     }
 
     return (
