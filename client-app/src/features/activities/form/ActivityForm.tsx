@@ -15,6 +15,7 @@ import MyTextArea from '../../../app/common/form/MyTextArea';
 import MySelectInput from '../../../app/common/form/MySelectInput';
 import { categoryOptions } from '../../../app/common/options/categoryOptions';
 import MyDateInput from '../../../app/common/form/MyDateInput';
+import { IActivity } from '../../../app/modules/activity';
 
 
 // ({activity: selectedActivity,closeForm} : Props) { renaming of activity to selectedActivity
@@ -28,12 +29,12 @@ export default observer(function ActivityForm() {
     // we check if we get any id which is set when user clicks on activity
     // if we dont then initial state will make all MyTextInput of the form empty
     // if we DO have an Id then we load that activity and than populate setActivity and override all empty MyTextInputs with info from id of the activity which user clicked on.
-    const [activity, setActivity] = useState({
+    const [activity, setActivity] = useState<IActivity>({
         id: '',
         title: '',
         category: '',
         description: '',
-        date: '',
+        date: null,
         city: '',
         venue: ''
     });

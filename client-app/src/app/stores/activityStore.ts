@@ -1,6 +1,7 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import agent from "../api/agent";
 import { IActivity } from "../modules/activity";
+import {format} from 'date-fns';
 
 export default class ActivityStore {
     actvityRegistry = new Map<string, IActivity>();
@@ -23,14 +24,14 @@ export default class ActivityStore {
 
     get activitiesByDate() {
         return Array.from(this.actvityRegistry.values()).sort((a, b) =>
-            Date.parse(a.date) - Date.parse(b.date));
+            a.date!.getTime() - b.date!.getTime());
     }
 
     // return array of object where each object has key of activity date and value as all activities with the same date
     get groupedActivities() {
         return Object.entries(
             this.activitiesByDate.reduce((activities, activity) => {
-                const date = activity.date; // key
+                const date = format(activity.date!,'dd MMM yyyy'); // key
                 activities[date] = activities[date] ? [...activities[date], activity] : [activity]; // foreach activity we check if we have match for activity date.
                 return activities;
             }, {} as { [key: string]: IActivity[] })
@@ -73,7 +74,7 @@ export default class ActivityStore {
     }
 
     private setActivity = (activity: IActivity) => {
-        activity.date = activity.date.split('T')[0];
+        activity.date = new Date(activity.date!);
         this.actvityRegistry.set(activity.id, activity);
     }
     private getActivity = (id: string) => {
