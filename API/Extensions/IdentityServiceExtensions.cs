@@ -22,7 +22,7 @@ namespace API.Extensions
            .AddSignInManager<SignInManager<AppUser>>();
 
            // should the same key as in TokenService
-           var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("super secret key"));
+           var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TokenKey"]));
 
            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(opt =>
