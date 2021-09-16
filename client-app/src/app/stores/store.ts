@@ -1,6 +1,7 @@
 import { createContext, useContext } from "react";
 import ActivityStore from "./activityStore";
 import CommonStore from "./commonStore";
+import UserStore from "./userStore";
 
 /**
  * So here we will be decalring Stores we have for different functionalities in Interface
@@ -12,10 +13,12 @@ import CommonStore from "./commonStore";
 interface Store {
     activityStore: ActivityStore;
     commonStore: CommonStore;
+    userStore: UserStore;
 }
 
 export const store: Store = {
     activityStore: new ActivityStore(),
+    userStore: new UserStore(),
     commonStore: new CommonStore()
 }
 
