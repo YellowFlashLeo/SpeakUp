@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 import { textSpanContainsTextSpan } from 'typescript';
 import { history } from '../..';
 import { IActivity } from '../modules/activity';
+import { User, UserFormValues } from '../modules/user';
 import { store } from '../stores/store';
 
 
@@ -75,9 +76,16 @@ const Activities = {
     update: (activity: IActivity) => axios.put(`/activities/${activity.id}`, activity),
     delete: (id: string) => axios.delete(`/activities/${id}`)
 }
+// For Authentication/Authorization purposes
+const Account = {
+    current: () => requests.get<User>('/account'),
+    login: (user: UserFormValues) => requests.post<User>('/account/login', user),
+    register: (user: UserFormValues) => requests.post<User>('/account/register', user)
+}
 
 const agent = {
-    Activities
+    Activities,
+    Account
 }
 
 export default agent;
