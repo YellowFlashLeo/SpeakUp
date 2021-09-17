@@ -14,6 +14,7 @@ import LoginForm from '../../features/users/LoginForm';
 import { useStore } from '../stores/store';
 import { useEffect } from 'react';
 import LoadingComponent from './LoadingComponents';
+import ModalContainer from '../common/modals/ModalContainer';
 
 // useState in React Hook which allows to store state inside Component
 // [activities] will name of variable where state will be stored
@@ -37,6 +38,7 @@ function App() {
   return (
     <>
       <ToastContainer position='bottom-right' hideProgressBar />
+      <ModalContainer />
       <Route exact path='/' component={HomePage} />
       <Route
         path={`/(.+)`}
