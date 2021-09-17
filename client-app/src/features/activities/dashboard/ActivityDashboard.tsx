@@ -20,7 +20,7 @@ export default observer(function ActivityDashboard() {
     }, [actvityRegistry.size,loadActivities]) // will ensure it only runs once, otherwise we will call api and get data, setActivities will assign data to activities and since React component chnages. It causes rerender of the entire component,
     // so useEffect will be triggered again and again (endless loop)
 
-    if (activityStore.loadingInitial) return <LoadingComponent content="Loading app" />
+    if (activityStore.loadingInitial) return <LoadingComponent content="Loading activities..." />
 
 
     return (

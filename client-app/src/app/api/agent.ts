@@ -15,9 +15,16 @@ const sleep = (delay: number) => {
 }
 axios.defaults.baseURL = 'http://localhost:5000/api';
 
+// thse interceptor is going to make sure that we send token
+// with each request when we have token in our commonSotre
+axios.interceptors.request.use(config=> {
+    const token = store.commonStore.token;
+    if(token) config.headers.Authorization = `Bearer ${token}`
+    return config;
+})
+
 // says to do smthing when we getting response back from API 
 axios.interceptors.response.use(async response => {
-
     await sleep(1000);
     return response;
 }, (error: AxiosError) => {
