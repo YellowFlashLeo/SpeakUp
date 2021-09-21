@@ -9,13 +9,6 @@ export default class ActivityStore {
     editMode = false;
     loading = false;
     loadingInitial = false;
-    /*(constructor() {
-        makeObservable(this, {
-            title: observable,
-            setTitle: action
-        });
-
-    }*/
 
     // Will allow all props decalred in this class to be observable automatically
     constructor() {

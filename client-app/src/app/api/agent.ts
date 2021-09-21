@@ -1,6 +1,5 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { toast } from 'react-toastify';
-import { textSpanContainsTextSpan } from 'typescript';
 import { history } from '../..';
 import { IActivity } from '../modules/activity';
 import { User, UserFormValues } from '../modules/user';
