@@ -13,7 +13,7 @@ namespace Persistence
         public DbSet<ActivityAttendee> ActivityAttendees { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
-        {
+        {  
             base.OnModelCreating(builder);
 
             // Composite Primary Key of ActivityAttendee table
