@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Application.Core;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -26,15 +27,23 @@ namespace Application.Activities
 
             public async Task<Result<List<ActivityDto>>> Handle(Query request, CancellationToken cancellationToken)
             {
+                // This is way with Eager loading and it makes sql query too noisy
+
+                // var activities = await _context.Activities
+                // .Include(a => a.Attendees)   // to get joinTable
+                // .ThenInclude(u => u.AppUser)   // to get related entities to Attendees
+                // .ToListAsync(cancellationToken);
+
+                // // .Map<ap where to> (from where)
+                // var activitiesToReturn = _mapper.Map<List<ActivityDto>>(activities);
+
+                // Much more efficient an dprofessional approach is to use AutoMapper.ProjectTo
+                // it will simply do the mapping based on provided rules in MappingProfile
+
                 var activities = await _context.Activities
-                .Include(a => a.Attendees)   // to get joinTable
-                .ThenInclude(u => u.AppUser)   // to get related entities to Attendees
+                .ProjectTo<ActivityDto>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
-
-                // .Map<ap where to> (from where)
-                var activitiesToReturn = _mapper.Map<List<ActivityDto>>(activities);
-
-                return Result<List<ActivityDto>>.Success(activitiesToReturn);
+                return Result<List<ActivityDto>>.Success(activities);
             }
         }
     }
