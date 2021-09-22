@@ -1,3 +1,4 @@
+using Application.Activities;
 using AutoMapper;
 using Domain;
 
@@ -9,6 +10,7 @@ namespace Application.Core
         {
             // for edit class
             CreateMap<Activity,Activity>();
+            CreateMap<Activity,ActivityDto>();
         }
     }
 }
