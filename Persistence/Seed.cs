@@ -7,11 +7,13 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Persistence
 {
+    // if you want to start from scartch and drop the entire datatbase
+    // dotnet ef database drop -p Persistence -s API
     public class Seed
     {
         public static async Task SeedData(DataContext context, UserManager<AppUser> userManager)
         {
-            if (!userManager.Users.Any())
+            if (!userManager.Users.Any() && !context.Activities.Any())
             {
                 var users = new List<AppUser>
                 {
@@ -24,11 +26,9 @@ namespace Persistence
                 {
                     await userManager.CreateAsync(user, "Pa$$w0rd");
                 }
-            }
-            if (context.Activities.Any()) return;
 
-            var activities = new List<Activity>
-            {
+                var activities = new List<Activity>
+             {
                 new Activity
                 {
                     Title = "Past Activity 1",
@@ -37,6 +37,14 @@ namespace Persistence
                     Category = "drinks",
                     City = "London",
                     Venue = "Pub",
+                    Attendees = new List<ActivityAttendee>
+                    {
+                        new ActivityAttendee
+                        {
+                            AppUser = users[0],
+                            IsHost = true
+                        }
+                    }
                 },
                 new Activity
                 {
@@ -46,6 +54,19 @@ namespace Persistence
                     Category = "culture",
                     City = "Paris",
                     Venue = "Louvre",
+                    Attendees = new List<ActivityAttendee>
+                    {
+                        new ActivityAttendee
+                        {
+                            AppUser = users[0],
+                            IsHost = true
+                        },
+                        new ActivityAttendee
+                        {
+                            AppUser = users[1],
+                            IsHost = false
+                        }
+                    }
                 },
                 new Activity
                 {
@@ -55,6 +76,19 @@ namespace Persistence
                     Category = "culture",
                     City = "London",
                     Venue = "Natural History Museum",
+                    Attendees = new List<ActivityAttendee>
+                    {
+                        new ActivityAttendee
+                        {
+                            AppUser = users[0],
+                            IsHost = true
+                        },
+                        new ActivityAttendee
+                        {
+                            AppUser = users[1],
+                            IsHost = false
+                        }
+                    }
                 },
                 new Activity
                 {
@@ -64,6 +98,19 @@ namespace Persistence
                     Category = "music",
                     City = "London",
                     Venue = "O2 Arena",
+                    Attendees = new List<ActivityAttendee>
+                    {
+                        new ActivityAttendee
+                        {
+                            AppUser = users[0],
+                            IsHost = true
+                        },
+                        new ActivityAttendee
+                        {
+                            AppUser = users[1],
+                            IsHost = false
+                        }
+                    }
                 },
                 new Activity
                 {
@@ -73,6 +120,19 @@ namespace Persistence
                     Category = "drinks",
                     City = "London",
                     Venue = "Another pub",
+                    Attendees = new List<ActivityAttendee>
+                    {
+                        new ActivityAttendee
+                        {
+                            AppUser = users[0],
+                            IsHost = true
+                        },
+                        new ActivityAttendee
+                        {
+                            AppUser = users[1],
+                            IsHost = false
+                        }
+                    }
                 },
                 new Activity
                 {
@@ -82,6 +142,19 @@ namespace Persistence
                     Category = "drinks",
                     City = "London",
                     Venue = "Yet another pub",
+                    Attendees = new List<ActivityAttendee>
+                    {
+                        new ActivityAttendee
+                        {
+                            AppUser = users[0],
+                            IsHost = true
+                        },
+                        new ActivityAttendee
+                        {
+                            AppUser = users[1],
+                            IsHost = false
+                        }
+                    }
                 },
                 new Activity
                 {
@@ -91,6 +164,19 @@ namespace Persistence
                     Category = "drinks",
                     City = "London",
                     Venue = "Just another pub",
+                    Attendees = new List<ActivityAttendee>
+                    {
+                        new ActivityAttendee
+                        {
+                            AppUser = users[0],
+                            IsHost = true
+                        },
+                        new ActivityAttendee
+                        {
+                            AppUser = users[1],
+                            IsHost = false
+                        }
+                    }
                 },
                 new Activity
                 {
@@ -100,6 +186,19 @@ namespace Persistence
                     Category = "music",
                     City = "London",
                     Venue = "Roundhouse Camden",
+                    Attendees = new List<ActivityAttendee>
+                    {
+                        new ActivityAttendee
+                        {
+                            AppUser = users[0],
+                            IsHost = true
+                        },
+                        new ActivityAttendee
+                        {
+                            AppUser = users[1],
+                            IsHost = false
+                        }
+                    }
                 },
                 new Activity
                 {
@@ -109,6 +208,19 @@ namespace Persistence
                     Category = "travel",
                     City = "London",
                     Venue = "Somewhere on the Thames",
+                    Attendees = new List<ActivityAttendee>
+                    {
+                        new ActivityAttendee
+                        {
+                            AppUser = users[0],
+                            IsHost = true
+                        },
+                        new ActivityAttendee
+                        {
+                            AppUser = users[1],
+                            IsHost = false
+                        }
+                    }
                 },
                 new Activity
                 {
@@ -118,11 +230,19 @@ namespace Persistence
                     Category = "film",
                     City = "London",
                     Venue = "Cinema",
+                     Attendees = new List<ActivityAttendee>
+                    {
+                        new ActivityAttendee
+                        {
+                            AppUser = users[1],
+                            IsHost = true
+                        }
+                    }
                 }
             };
-
-            await context.Activities.AddRangeAsync(activities);
-            await context.SaveChangesAsync();
+                await context.Activities.AddRangeAsync(activities);
+                await context.SaveChangesAsync();
+            }
         }
     }
 }
