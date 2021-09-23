@@ -1,7 +1,9 @@
 using System.Text;
 using API.Services;
 using Domain;
+using Infrastructure.Security;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -35,6 +37,15 @@ namespace API.Extensions
                       ValidateAudience = false 
                     };
                 });
+                // only host of the activity can edit the activity.
+           services.AddAuthorization(opt => 
+           {
+               opt.AddPolicy("IsActivityHost", policy =>
+               {
+                  policy.Requirements.Add(new IsHostRequirment());
+               });
+           });
+           services.AddTransient<IAuthorizationHandler,IsHostRequirmentHandler>();
            // Token will be available for the lifetime of http request to our API
            services.AddScoped<TokenService>();
 
