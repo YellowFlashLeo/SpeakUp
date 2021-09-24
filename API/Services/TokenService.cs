@@ -22,9 +22,9 @@ namespace API.Services
             // 1 -  We get user claims, who he claims to be
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name,user.UserName),
-                new Claim(ClaimTypes.NameIdentifier,user.Id),
-                new Claim(ClaimTypes.Email,user.Email)
+                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(ClaimTypes.NameIdentifier, user.Id),
+                new Claim(ClaimTypes.Email, user.Email)
             };
 
             // 2 - We have Special key for token which never leaves the server
